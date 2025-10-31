@@ -7,7 +7,7 @@ const storage = new Storage();
 const BUCKET_NAME = 'deccan-annotation-dev';
 
 const pathMapping = {
-  "annotation-admin.delta.soulhq.ai": "annotation-admin/dist"
+  "annotation-admin.delta.soulhq.ai": "annotation-admin-dev/dist"
   // ... add other mappings here
 };
 
