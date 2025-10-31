@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install dependencies (production only)
-RUN npm ci --production
+RUN npm install --production
 
 # Copy app source code
 COPY . .
@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 8080
 
 # Start the server
-CMD ["node", "server.js"]
+CMD ["node", "index.js"]
