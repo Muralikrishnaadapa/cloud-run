@@ -1,21 +1,20 @@
-# Use official Node.js runtime
+# Use official Node.js 22 image
 FROM node:22-slim
 
-# Set working directory
+# Create app directory
 WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies
+# Install dependencies (production only)
 RUN npm ci --production
 
-# Copy all source files
+# Copy app source code
 COPY . .
 
-# Expose the port Cloud Run uses
-ENV PORT=8080
+# Expose port 8080 (Cloud Run expects this)
 EXPOSE 8080
 
-# Start the app
-CMD ["node", "index.js"]
+# Start the server
+CMD ["node", "server.js"]
