@@ -41,6 +41,8 @@ app.get('*', async (req, res) => {
   }
 });
 
-// ✅ Cloud Run requires listening on process.env.PORT
+// Cloud Run requires listening on the port from the environment variable
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
+
+module.exports = app;
