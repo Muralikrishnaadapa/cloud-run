@@ -5,7 +5,7 @@ app.all('*', async (req, res) => {
     const host = req.headers.host || req.headers['x-forwarded-host'] || '';
     
     const pathMapping = {
-        "annotation-admin.delta.soulhq.ai": "/annotation-admin/0.6.42/dist",
+        "annotation-admin-google.delta.soulhq.ai": "/annotation-admin-dev/dist",
         "nucleus.delta.soulhq.ai": "/nucleus/0.1.0/storybook-static",
         "authentication.delta.soulhq.ai": "/authentication/0.0.20/dist",
         "freelancer-admin.delta.soulhq.ai": "/freelancer-admin/3.0.136/dist",
