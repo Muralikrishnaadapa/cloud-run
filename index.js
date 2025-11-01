@@ -10,6 +10,16 @@ app.get('/health', (req, res) => {
     res.status(200).send('OK');
 });
 
+// Debug endpoint to see all headers
+app.get('/debug-headers', (req, res) => {
+    res.json({
+        host: req.headers.host,
+        'x-forwarded-host': req.headers['x-forwarded-host'],
+        'x-forwarded-for': req.headers['x-forwarded-for'],
+        allHeaders: req.headers
+    });
+});
+
 // Log all incoming requests at middleware level
 app.use((req, res, next) => {
     console.log(`[MIDDLEWARE] Request received - Method: ${req.method}, Host: ${req.headers.host}, X-Forwarded-Host: ${req.headers['x-forwarded-host']}, Path: ${req.path}`);
