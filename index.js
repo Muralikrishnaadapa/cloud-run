@@ -33,6 +33,7 @@ app.all('*', async (req, res) => {
     // Path mapping for all domains
     const pathMapping = {
         "annotation-admin-google.delta.soulhq.ai": "/annotation-admin-dev/dist",
+        "annotation-admin.delta.deccan.ai": "/annotation-admin-dev/dist",
         "authentication-google.delta.soulhq.ai": "/annotation-admin-dev/dist",
         "freelancer-admin.delta.soulhq.ai": "/freelancer-admin/3.0.136/dist",
         "platform.delta.soulhq.ai": "/user-platform-app/0.0.24/dist",
