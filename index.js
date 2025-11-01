@@ -19,8 +19,9 @@ app.use((req, res, next) => {
 
 app.all('*', async (req, res) => {
     try {
-        const host = req.headers.host || req.headers['x-forwarded-host'] || '';
-        console.log(`Request received - Host: ${host}, Path: ${req.path}`);
+        // For Load Balancer, original Host is in X-Forwarded-Host
+        const host = req.headers['x-forwarded-host'] || req.headers.host || '';
+        console.log(`Request received - Host: ${req.headers.host}, X-Forwarded-Host: ${req.headers['x-forwarded-host']}, Using: ${host}, Path: ${req.path}`);
         
         const pathMapping = {
         "annotation-admin-google.delta.soulhq.ai": "/annotation-admin-dev/dist",
