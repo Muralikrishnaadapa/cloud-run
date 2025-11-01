@@ -1,11 +1,15 @@
 const express = require('express');
+const { Storage } = require('@google-cloud/storage');
 const app = express();
+
+const storage = new Storage();
 
 app.all('*', async (req, res) => {
     const host = req.headers.host || req.headers['x-forwarded-host'] || '';
     
     const pathMapping = {
         "annotation-admin-google.delta.soulhq.ai": "/annotation-admin-dev/dist",
+        "annotation-admin.delta.soulhq.ai": "/annotation-admin/0.6.42/dist",
         "nucleus.delta.soulhq.ai": "/nucleus/0.1.0/storybook-static",
         "authentication.delta.soulhq.ai": "/authentication/0.0.20/dist",
         "freelancer-admin.delta.soulhq.ai": "/freelancer-admin/3.0.136/dist",
@@ -40,25 +44,37 @@ app.all('*', async (req, res) => {
         requestPath = pathPrefix + requestPath;
     }
     
-    // Construct the Cloud Storage URL
+    // Get file from Cloud Storage
     const bucketName = process.env.BUCKET_NAME || 'deccan-annotation-dev';
-    const fileUrl = `https://storage.googleapis.com/${bucketName}${requestPath}`;
-    console.log(`Fetching from: ${fileUrl}`);
+    // Remove leading slash from path if present
+    const filePath = requestPath.startsWith('/') ? requestPath.substring(1) : requestPath;
     
-    // Fetch and serve the file from Cloud Storage
+    // Log for debugging
+    console.log(`Fetching from bucket: ${bucketName}, path: ${filePath}`);
+    
     try {
-        const fetchResponse = await fetch(fileUrl);
+        const bucket = storage.bucket(bucketName);
+        const file = bucket.file(filePath);
         
-        if (fetchResponse.ok) {
-            const contentType = fetchResponse.headers.get('content-type') || 'text/html';
-            const fileContent = await fetchResponse.text();
-            
-            res.set('Content-Type', contentType);
-            res.set('Cache-Control', 'public, max-age=3600');
-            res.status(200).send(fileContent);
-        } else {
-            res.status(fetchResponse.status).send('File not found');
+        // Check if file exists
+        const [exists] = await file.exists();
+        
+        if (!exists) {
+            console.error(`File not found: gs://${bucketName}/${filePath}`);
+            return res.status(404).send(`File not found: ${filePath}`);
         }
+        
+        // Get file metadata for content type
+        const [metadata] = await file.getMetadata();
+        const contentType = metadata.contentType || 'text/html';
+        
+        // Read file content
+        const [fileContent] = await file.download();
+        
+        res.set('Content-Type', contentType);
+        res.set('Cache-Control', 'public, max-age=3600');
+        res.status(200).send(fileContent);
+        
     } catch (error) {
         console.error('Error fetching file:', error);
         res.status(500).send('Internal server error');
