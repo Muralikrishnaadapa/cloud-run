@@ -12,7 +12,8 @@ app.get('/health', (req, res) => {
 
 // Log all incoming requests at middleware level
 app.use((req, res, next) => {
-    console.log(`[MIDDLEWARE] Request received - Method: ${req.method}, Host: ${req.headers.host}, Path: ${req.path}`);
+    console.log(`[MIDDLEWARE] Request received - Method: ${req.method}, Host: ${req.headers.host}, X-Forwarded-Host: ${req.headers['x-forwarded-host']}, Path: ${req.path}`);
+    console.log(`[MIDDLEWARE] All headers:`, JSON.stringify(req.headers, null, 2));
     next();
 });
 
