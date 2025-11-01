@@ -29,8 +29,20 @@ app.use((req, res, next) => {
 
 app.all('*', async (req, res) => {
     try {
-        // For Load Balancer, original Host is in X-Forwarded-Host
-        const host = req.headers['x-forwarded-host'] || req.headers.host || '';
+        // For Load Balancer, check X-Forwarded-Host first, then Host
+        // If Host is the Cloud Run service URL, try to infer from URL map or use default
+        let host = req.headers['x-forwarded-host'] || req.headers.host || '';
+        
+        // If host is the Cloud Run service URL, check if we're in Load Balancer context
+        // The Load Balancer routes annotation-admin-google.delta.soulhq.ai to this backend
+        // So if host doesn't match, but request came through LB, use the mapped domain
+        if (host.includes('cloud-run') || host.includes('.run.app')) {
+            // Check if there's a way to get the original host
+            // For now, since URL map routes annotation-admin-google.delta.soulhq.ai to this backend,
+            // we can assume requests coming through LB are for that domain
+            host = 'annotation-admin-google.delta.soulhq.ai';
+        }
+        
         console.log(`Request received - Host: ${req.headers.host}, X-Forwarded-Host: ${req.headers['x-forwarded-host']}, Using: ${host}, Path: ${req.path}`);
         
         const pathMapping = {
