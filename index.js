@@ -4,6 +4,18 @@ const app = express();
 
 const storage = new Storage();
 
+// Health check route
+app.get('/health', (req, res) => {
+    console.log('Health check endpoint hit');
+    res.status(200).send('OK');
+});
+
+// Log all incoming requests at middleware level
+app.use((req, res, next) => {
+    console.log(`[MIDDLEWARE] Request received - Method: ${req.method}, Host: ${req.headers.host}, Path: ${req.path}`);
+    next();
+});
+
 app.all('*', async (req, res) => {
     try {
         const host = req.headers.host || req.headers['x-forwarded-host'] || '';
