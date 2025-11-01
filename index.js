@@ -44,10 +44,15 @@ app.all('*', async (req, res) => {
         "folder4.delta.soulhq.ai": "/prod-app-landing/0.0.0/dist"
     };
     
+    // Log the exact host value received
+    console.log(`[DEBUG] Host value: "${host}", Type: ${typeof host}, Length: ${host.length}`);
+    console.log(`[DEBUG] Available keys in pathMapping:`, Object.keys(pathMapping));
+    
     const pathPrefix = pathMapping[host];
     
     if (!pathPrefix) {
-        return res.status(404).send('Host not found in mapping');
+        console.error(`[ERROR] Host not found: "${host}". Available hosts: ${Object.keys(pathMapping).join(', ')}`);
+        return res.status(404).send(`Host not found in mapping. Received: "${host}"`);
     }
     
     let requestPath = req.path;
