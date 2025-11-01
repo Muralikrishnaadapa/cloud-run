@@ -29,19 +29,17 @@ app.use((req, res, next) => {
 
 app.all('*', async (req, res) => {
     try {
-        // For Load Balancer with serverless NEG, the Host header gets replaced with Cloud Run URL
-        // Use environment variable to know which domain this service is mapped to
-        // Or check X-Forwarded-Host if available
+        // Get host from headers
         let host = req.headers['x-forwarded-host'] || req.headers.host || '';
         
-        // If host is Cloud Run URL (coming through Load Balancer), use mapped domain from env var
-        const mappedDomain = process.env.MAPPED_DOMAIN;
-        if ((host.includes('cloud-run') || host.includes('.run.app')) && mappedDomain) {
-            console.log(`[DEBUG] Detected Load Balancer request, using mapped domain: ${mappedDomain}`);
-            host = mappedDomain;
+        // Load Balancer replaces Host with Cloud Run URL (e.g., cloud-run-xxxxx.run.app)
+        // Since URL map routes only annotation-admin-google.delta.soulhq.ai to this backend,
+        // we can safely use that domain when Host is a Cloud Run URL
+        if (host.includes('.run.app') || host.includes('cloud-run')) {
+            host = 'annotation-admin-google.delta.soulhq.ai';
         }
         
-        console.log(`Request received - Host: ${req.headers.host}, X-Forwarded-Host: ${req.headers['x-forwarded-host']}, Using: ${host}, Path: ${req.path}`);
+        console.log(`Request - Host: ${req.headers.host}, X-Forwarded: ${req.headers['x-forwarded-host']}, Using: ${host}, Path: ${req.path}`);
         
         const pathMapping = {
         "annotation-admin-google.delta.soulhq.ai": "/annotation-admin-dev/dist",
@@ -73,7 +71,7 @@ app.all('*', async (req, res) => {
     
     if (!pathPrefix) {
         console.error(`[ERROR] Host not found: "${host}". Available hosts: ${Object.keys(pathMapping).join(', ')}`);
-        return res.status(404).send(`Host not found in mapping. Received: "${host}"`);
+        return res.status(404).send(`[NEW CODE] Host not found. Received: "${host}", MAPPED_DOMAIN: "${process.env.MAPPED_DOMAIN}"`);
     }
     
     let requestPath = req.path;
