@@ -43,6 +43,7 @@ app.all('*', async (req, res) => {
     // Construct the Cloud Storage URL
     const bucketName = process.env.BUCKET_NAME || 'deccan-annotation-dev';
     const fileUrl = `https://storage.googleapis.com/${bucketName}${requestPath}`;
+    console.log(`Fetching from: ${fileUrl}`);
     
     // Fetch and serve the file from Cloud Storage
     try {
