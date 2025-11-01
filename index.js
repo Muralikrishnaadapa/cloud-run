@@ -5,9 +5,11 @@ const app = express();
 const storage = new Storage();
 
 app.all('*', async (req, res) => {
-    const host = req.headers.host || req.headers['x-forwarded-host'] || '';
-    
-    const pathMapping = {
+    try {
+        const host = req.headers.host || req.headers['x-forwarded-host'] || '';
+        console.log(`Request received - Host: ${host}, Path: ${req.path}`);
+        
+        const pathMapping = {
         "annotation-admin-google.delta.soulhq.ai": "/annotation-admin-dev/dist",
         "annotation-admin.delta.soulhq.ai": "/annotation-admin/0.6.42/dist",
         "nucleus.delta.soulhq.ai": "/nucleus/0.1.0/storybook-static",
@@ -77,7 +79,11 @@ app.all('*', async (req, res) => {
         
     } catch (error) {
         console.error('Error fetching file:', error);
-        res.status(500).send('Internal server error');
+        res.status(500).send('Internal server error: ' + error.message);
+    }
+    } catch (error) {
+        console.error('Unhandled error in request handler:', error);
+        res.status(500).send('Internal server error: ' + error.message);
     }
 });
 
