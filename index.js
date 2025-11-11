@@ -39,7 +39,7 @@ app.all('*', async (req, res) => {
         "platform.delta.soulhq.ai": "/user-platform-app/0.0.24/dist",
         "delta.soulhq.ai": "/soul-ai-main/soul-ai-landing-page-462efba3246e6394db.webflow",
         "assessment.delta.soulhq.ai": "/assessment-platform-app/0.0.11/dist",
-        "studio-platform.delta.deccan.ai": "/soul-task-studio-platform/0.0.14/dist",
+        "studio-platform-groot.delta.deccan.ai": "/soul-task-studio-platform/0.0.14/dist",
         "authentication-new.delta.soulhq.ai": "/authentication-new/0.1.15/dist",
         "platform-new.delta.soulhq.ai": "/user-platform-app-new/6.0.26/dist",
         "assessment-new.delta.soulhq.ai": "/assessment-platform-app-new/8.0.4/dist",
