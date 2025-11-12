@@ -32,7 +32,7 @@ app.all('*', async (req, res) => {
     
     // Path mapping for all domains
     const pathMapping = {
-        "annotation-admin-groot.delta.deccan.ai": "/deccan-annotation-dev/0.5.27/dist",
+        "annotation-admin-groot.delta.deccan.ai": "/deccan-annotation-dev/0.5.33/dist",
         "studio-platform-groot.delta.deccan.ai": "/studio-platform-groot/0.0.12/dist",
         "studio-groot.delta.deccan.ai": "/studio-groot/3.1.63/dist"
     };
