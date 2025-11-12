@@ -34,7 +34,7 @@ app.all('*', async (req, res) => {
     const pathMapping = {
         "annotation-admin-groot.delta.deccan.ai": "/deccan-annotation-dev/0.5.33/dist",
         "studio-platform-groot.delta.deccan.ai": "/studio-platform-groot/0.0.12/dist",
-        "studio-groot.delta.deccan.ai": "/studio-groot/3.1.63/dist"
+        "studio-groot.delta.deccan.ai": "/studio-groot/0.0.16/dist"
     };
     
     const pathPrefix = pathMapping[hostname];
